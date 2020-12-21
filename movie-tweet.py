@@ -36,7 +36,7 @@ win.setWindowTitle("Movie Tweets")
 
 def send_tweet(choice):  # Takes the given movie and sends a tweet in the form: watching (title) (release date)
     path = r"C:\Program Files (x86)\chromedriver.exe"
-    driver = webdriver.Chrome(path)
+    driver = webdriver.Chrome(executable_path=path)
     driver.maximize_window()
 
     driver.get("https://twitter.com/login")
@@ -48,7 +48,7 @@ def send_tweet(choice):  # Takes the given movie and sends a tweet in the form: 
     password.send_keys(FILE.readline().strip(), Keys.ENTER)
     FILE.close()
 
-    time.sleep(5)
+    time.sleep(2)
     tweet_element = driver.find_element_by_css_selector("[aria-label='Tweet text']")
     tweet_element.send_keys(choice.get_tweet())
 
@@ -58,7 +58,7 @@ def send_tweet(choice):  # Takes the given movie and sends a tweet in the form: 
     send = driver.find_element_by_css_selector("[data-testid='tweetButtonInline']")
     send.click()
 
-    time.sleep(5)
+    time.sleep(3)
     driver.quit()
     delete_posters()
     app.quit()
