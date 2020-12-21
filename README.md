@@ -13,6 +13,7 @@ Only required libraries are Selenium and PyQt5. An api key from https://www.them
 (twitter username)
 (twitter password)
 ```
-
+## Demonstration
+https://www.youtube.com/watch?v=u355D9ayces
 # Authors
 * Curtiss Williams - cowilliams4@crimson.ua.edu
