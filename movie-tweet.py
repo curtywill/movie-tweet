@@ -8,7 +8,7 @@ import os
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox,
-                             QLabel, QWidget, QScrollArea, QDockWidget, QLineEdit)
+                             QLabel, QWidget, QDockWidget, QLineEdit)
 
 FILE = open("info.txt", "r")
 
@@ -26,11 +26,11 @@ movies = []
 pages = []
 
 grid = QGridLayout()
-WIDTH, HEIGHT = 1000, 825
+WIDTH, HEIGHT = 1000, 900
 app = QApplication([])
 app.setStyle('Fusion')
 win = QMainWindow()
-win.setGeometry(500, 150, WIDTH, HEIGHT)
+win.setGeometry(500, 100, WIDTH, HEIGHT)
 win.setWindowTitle("Movie Tweets")
 
 
@@ -164,8 +164,6 @@ def show_page():
 
 def main():
 
-    scroll = QScrollArea(win)
-    scroll.setWidgetResizable(True)
     central_widget = QWidget()
 
     input_dock = QDockWidget()
@@ -211,8 +209,7 @@ def main():
         get_movies()
         create_boxes()
         central_widget.setLayout(grid)
-        scroll.setWidget(central_widget)
-        win.setCentralWidget(scroll)
+        win.setCentralWidget(central_widget)
         input_dock.setVisible(False)
         num_label.setText(f"Page {page_num} of {total_pages}")
         last_btn.setVisible(False)
@@ -228,8 +225,7 @@ def main():
         else:
             create_boxes()
         central_widget.setLayout(grid)
-        scroll.setWidget(central_widget)
-        win.setCentralWidget(scroll)
+        win.setCentralWidget(central_widget)
         if page_num == total_pages:
             next_btn.setVisible(False)
         else:
@@ -242,8 +238,7 @@ def main():
         page_num -= 1
         show_page()
         central_widget.setLayout(grid)
-        scroll.setWidget(central_widget)
-        win.setCentralWidget(scroll)
+        win.setCentralWidget(central_widget)
         if page_num == total_pages-1:
             next_btn.setVisible(True)
         if page_num == 1:
