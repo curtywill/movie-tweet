@@ -10,8 +10,6 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox,
                              QLabel, QWidget, QDockWidget, QLineEdit)
 
-FILE = open("info.txt", "r")
-
 index = 0
 page_num = 1
 total_pages = 1
