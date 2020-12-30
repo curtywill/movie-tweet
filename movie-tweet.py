@@ -1,5 +1,5 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+import tweepy
+import config
 import time
 import requests
 import json
@@ -16,7 +16,6 @@ index = 0
 page_num = 1
 total_pages = 1
 
-api_key = FILE.readline().strip()
 base_url = 'https://api.themoviedb.org/3/'
 base_image = 'https://image.tmdb.org/t/p/w500'
 
@@ -31,35 +30,17 @@ app = QApplication([])
 app.setStyle('Fusion')
 win = QMainWindow()
 win.setGeometry(500, 100, WIDTH, HEIGHT)
-win.setWindowTitle("Movie Tweets")
+win.setWindowTitle('Movie Tweets')
 
 
 def send_tweet(choice):  # Takes the given movie and sends a tweet in the form: watching (title) (release date)
-    path = r"C:\Program Files (x86)\chromedriver.exe"
-    driver = webdriver.Chrome(executable_path=path)
-    driver.maximize_window()
+    print("sending tweet")
+    auth = tweepy.OAuthHandler(config.consumer_key, config.consumer_secret)
+    auth.set_access_token(config.access_token, config.access_secret)
 
-    driver.get("https://twitter.com/login")
-
-    username = driver.find_element_by_name("session[username_or_email]")
-    username.send_keys(FILE.readline().strip())
-
-    password = driver.find_element_by_name("session[password]")
-    password.send_keys(FILE.readline().strip(), Keys.ENTER)
-    FILE.close()
-
-    time.sleep(2)
-    tweet_element = driver.find_element_by_css_selector("[aria-label='Tweet text']")
-    tweet_element.send_keys(choice.get_tweet())
-
-    file_submit = driver.find_element_by_css_selector("[data-testid='fileInput']")
-    file_submit.send_keys(rf"{os.getcwd()}\{choice.poster_path}")
-
-    send = driver.find_element_by_css_selector("[data-testid='tweetButtonInline']")
-    send.click()
-
-    time.sleep(3)
-    driver.quit()
+    api = tweepy.API(auth)
+    api.update_with_media(choice.poster_path, choice.get_tweet())
+    print("tweet sent!")
     delete_posters()
     app.quit()
 
@@ -98,7 +79,7 @@ class Box:
 
 def get_movies():  # Calls the API to get movies that match our search query.
     global movies, total_pages
-    r = requests.get(base_url + f"search/movie?api_key={api_key}&query={search_movie}")
+    r = requests.get(base_url + f"search/movie?api_key={config.api_key}&query={search_movie}")
     data = json.loads(r.content)
     for movie in data["results"]:
         if movie["poster_path"] is None:
