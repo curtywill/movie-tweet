@@ -27,7 +27,7 @@ access_secret = "ACCESS SECRET"
 * Tweet Image
 <p align="center">
 <img src="Tweet_Image.jpg">
-
 </p>
+
 # Authors
 * Curtiss Williams - cowilliams4@crimson.ua.edu
