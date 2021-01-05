@@ -43,6 +43,7 @@ def send_tweet(choice):  # Takes the given movie and sends a tweet in the form: 
     app.quit()
 
 
+
 class Box:
 
     def __init__(self, poster_path, movie_info):
@@ -85,7 +86,11 @@ def get_movies():  # Calls the API to get movies that match our search query.
         if "release_date" not in movie:
             continue
         movies.append(movie)
-
+        
+    if len(movies) == 0:
+        print("no results found !")
+        sys.exit()
+        
     if (len(movies) // 4) == 0:
         total_pages = 1
         return
@@ -94,7 +99,7 @@ def get_movies():  # Calls the API to get movies that match our search query.
     else:
         total_pages = (len(movies) // 4) + 1
 
-
+    
 def delete_posters():  # Deletes the posters generated in create_boxes()
     posters = os.listdir(os.getcwd())
     for poster in posters:
@@ -126,12 +131,14 @@ def create_boxes():  # Creates posters and adds boxes to the grid.
             grid.addWidget(box.get_box(), a, b)
             index += 1
             if index == len(movies):
-                return
+                break
+        else:
+            continue
+        break
     pages.append(temp)
 
 
 def show_page():
-    global grid, page_num
     clear_grid()
     page = pages[page_num-1]
     i = 0
@@ -139,6 +146,8 @@ def show_page():
         for b in range(2):
             grid.addWidget(page[i].get_box(), a, b)
             i += 1
+            if i == len(page):
+                return
 
 
 def main():
@@ -211,7 +220,7 @@ def main():
             next_btn.setVisible(True)
         last_btn.setVisible(True)
         num_label.setText(f"Page {page_num} of {total_pages}")
-
+ 
     def last_page():
         global page_num
         page_num -= 1
@@ -225,11 +234,13 @@ def main():
         num_label.setText(f"Page {page_num} of {total_pages}")
 
     button.clicked.connect(show_boxes)
+    search_bar.returnPressed.connect(show_boxes)
+    comment_bar.returnPressed.connect(show_boxes)
     next_btn.clicked.connect(next_page)
     last_btn.clicked.connect(last_page)
-
     win.show()
-    sys.exit(app.exec_())
-
+    app.exec_()
+    delete_posters() #  In case the program is ran but no Tweet is sent.
+    
 
 main()
