@@ -1,3 +1,4 @@
+import string
 import tweepy
 import config
 import time
@@ -8,7 +9,7 @@ import os
 from PyQt5.QtCore import *
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox,
-                             QLabel, QWidget, QDockWidget, QLineEdit)
+                             QLabel, QWidget, QDockWidget, QLineEdit, QCheckBox)
 
 index = 0
 page_num = 1
@@ -21,6 +22,7 @@ search_movie = ""
 comments = None
 movies = []
 pages = []
+watched = False
 
 grid = QGridLayout()
 WIDTH, HEIGHT = 1000, 900
@@ -54,7 +56,8 @@ class Box:
         self.init_box()
 
     def get_tweet(self):
-        return f"watching {self.movie_info['original_title']} ({self.movie_info['release_date'][0:4]}) {comments}"
+        watched_str = "watched" if watched else "watching"
+        return f"{watched_str} {self.movie_info['original_title']} ({self.movie_info['release_date'][0:4]}) {comments}"
 
     def init_box(self):
         global grid
@@ -149,6 +152,9 @@ def show_page():
             if i == len(page):
                 return
 
+def movie_watched():
+    global watched
+    watched = True
 
 def main():
 
@@ -164,10 +170,12 @@ def main():
     search_bar.setPlaceholderText("Enter a movie")
     comment_bar = QLineEdit()
     comment_bar.setPlaceholderText("Comments?")
-    button = QPushButton()
+    search_button = QPushButton("Search")
+    watched_box = QCheckBox("Watched?")
     top_layout.addWidget(search_bar)
     top_layout.addWidget(comment_bar)
-    top_layout.addWidget(button)
+    top_layout.addWidget(watched_box)
+    top_layout.addWidget(search_button)
     top_widget.setLayout(top_layout)
     input_dock.setWidget(top_widget)
     win.addDockWidget(Qt.TopDockWidgetArea, input_dock)
@@ -233,9 +241,10 @@ def main():
             last_btn.setVisible(False)
         num_label.setText(f"Page {page_num} of {total_pages}")
 
-    button.clicked.connect(show_boxes)
+    search_button.clicked.connect(show_boxes)
     search_bar.returnPressed.connect(show_boxes)
     comment_bar.returnPressed.connect(show_boxes)
+    watched_box.toggled.connect(movie_watched)
     next_btn.clicked.connect(next_page)
     last_btn.clicked.connect(last_page)
     win.show()
